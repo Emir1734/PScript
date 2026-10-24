@@ -129,11 +129,42 @@ std::vector<std::uint8_t> scrypt_openssl(const std::uint8_t* password, std::size
                                          const std::uint8_t* salt, std::size_t salt_length,
                                          const CryptoKdfScryptParams& params, std::size_t output_length) {
     std::vector<std::uint8_t> out(output_length);
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+    EVP_KDF* kdf = EVP_KDF_fetch(nullptr, "SCRYPT", nullptr);
+    if (kdf == nullptr) {
+        crypto_fail("scrypt KDF provider is not available");
+    }
+    EVP_KDF_CTX* ctx = EVP_KDF_CTX_new(kdf);
+    EVP_KDF_free(kdf);
+    if (ctx == nullptr) {
+        crypto_fail("failed to allocate scrypt KDF context");
+    }
+    uint64_t n = static_cast<uint64_t>(params.n);
+    uint64_t r = static_cast<uint64_t>(params.r);
+    uint64_t p = static_cast<uint64_t>(params.p);
+    uint64_t max_mem = 1024ULL * 1024ULL * 1024ULL;
+    const OSSL_PARAM ossl_params[] = {
+        OSSL_PARAM_octet_string(OSSL_KDF_PARAM_PASSWORD,
+                                const_cast<void*>(static_cast<const void*>(password)), password_length),
+        OSSL_PARAM_octet_string(OSSL_KDF_PARAM_SALT, const_cast<void*>(static_cast<const void*>(salt)), salt_length),
+        OSSL_PARAM_uint64(OSSL_KDF_PARAM_SCRYPT_N, &n),
+        OSSL_PARAM_uint64(OSSL_KDF_PARAM_SCRYPT_R, &r),
+        OSSL_PARAM_uint64(OSSL_KDF_PARAM_SCRYPT_P, &p),
+        OSSL_PARAM_uint64(OSSL_KDF_PARAM_SCRYPT_MAXMEM, &max_mem),
+        OSSL_PARAM_END,
+    };
+    if (EVP_KDF_derive(ctx, out.data(), out.size(), ossl_params) != 1) {
+        EVP_KDF_CTX_free(ctx);
+        crypto_fail("scrypt operation failed");
+    }
+    EVP_KDF_CTX_free(ctx);
+#else
     if (EVP_PBE_scrypt(reinterpret_cast<const char*>(password), password_length, salt, salt_length,
                        static_cast<uint64_t>(params.n), static_cast<uint64_t>(params.r),
                        static_cast<uint64_t>(params.p), 0, out.data(), output_length) != 1) {
         crypto_fail("scrypt operation failed");
     }
+#endif
     return out;
 }
 

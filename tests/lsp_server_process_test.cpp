@@ -20,9 +20,11 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <signal.h>
+#include <spawn.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+extern char** environ;
 #endif
 
 namespace {
@@ -349,26 +351,32 @@ std::optional<PipeProcess> spawn_lsp(const char* exe_path) {
     if (pipe(stdin_pipe) != 0 || pipe(stdout_pipe) != 0) {
         return std::nullopt;
     }
-    const pid_t pid = fork();
-    if (pid < 0) {
+    posix_spawn_file_actions_t actions;
+    if (posix_spawn_file_actions_init(&actions) != 0) {
         close(stdin_pipe[0]);
         close(stdin_pipe[1]);
         close(stdout_pipe[0]);
         close(stdout_pipe[1]);
         return std::nullopt;
     }
-    if (pid == 0) {
-        close(stdin_pipe[1]);
-        close(stdout_pipe[0]);
-        dup2(stdin_pipe[0], STDIN_FILENO);
-        dup2(stdout_pipe[1], STDOUT_FILENO);
-        close(stdin_pipe[0]);
-        close(stdout_pipe[1]);
-        execl(exe_path, exe_path, static_cast<char*>(nullptr));
-        _exit(127);
-    }
+    posix_spawn_file_actions_addclose(&actions, stdin_pipe[1]);
+    posix_spawn_file_actions_addclose(&actions, stdout_pipe[0]);
+    posix_spawn_file_actions_adddup2(&actions, stdin_pipe[0], STDIN_FILENO);
+    posix_spawn_file_actions_adddup2(&actions, stdout_pipe[1], STDOUT_FILENO);
+    posix_spawn_file_actions_addclose(&actions, stdin_pipe[0]);
+    posix_spawn_file_actions_addclose(&actions, stdout_pipe[1]);
+    char* const argv[] = {const_cast<char*>(exe_path), nullptr};
+    pid_t pid = -1;
+    const int spawn_status =
+        posix_spawn(&pid, exe_path, &actions, nullptr, argv, environ);
+    posix_spawn_file_actions_destroy(&actions);
     close(stdin_pipe[0]);
     close(stdout_pipe[1]);
+    if (spawn_status != 0 || pid < 0) {
+        close(stdin_pipe[1]);
+        close(stdout_pipe[0]);
+        return std::nullopt;
+    }
     proc.pid = pid;
     proc.stdin_write = stdin_pipe[1];
     proc.stdout_read = stdout_pipe[0];
