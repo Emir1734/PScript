@@ -367,10 +367,10 @@ if (OpenSSL_FOUND)
     target_compile_definitions(pscript_additional_tests PRIVATE PSCRIPT_HAS_OPENSSL=1)
 endif()
 
-add_executable(race_only_test
-    build/race_only_test.cpp
-)
-target_link_libraries(race_only_test PRIVATE pscript_vm)
+if(EXISTS "${CMAKE_SOURCE_DIR}/build/race_only_test.cpp")
+    add_executable(race_only_test build/race_only_test.cpp)
+    target_link_libraries(race_only_test PRIVATE pscript_vm)
+endif()
 
 add_executable(pscript_runtime_tests
     tests/runtime_test.cpp

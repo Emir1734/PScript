@@ -24,7 +24,7 @@ ctest --test-dir build -LE postgres --output-on-failure
 Windows (Visual Studio generator):
 
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake -S . -B build -G "Visual Studio 18 2026" -A x64
 cmake --build build --config Release --parallel
 ctest --test-dir build -C Release -LE postgres --output-on-failure
 ```
