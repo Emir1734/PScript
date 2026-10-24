@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-release:
+    name: Windows Release (MSVC)
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Test (excluding PostgreSQL integration)
+        run: ctest --test-dir build -C Release -LE postgres --output-on-failure --timeout 300
+
+  windows-debug:
+    name: Windows Debug (MSVC)
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+
+      - name: Build
+        run: cmake --build build --config Debug --parallel
+
+      - name: Test (excluding PostgreSQL integration)
+        run: ctest --test-dir build -C Debug -LE postgres --output-on-failure --timeout 300
+
+  linux-release:
+    name: Linux Release (GCC)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build pkg-config \
+            libssl-dev libsqlite3-dev
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test (excluding PostgreSQL integration)
+        run: ctest --test-dir build -LE postgres --output-on-failure --timeout 300
+
+  linux-postgres:
+    name: Linux PostgreSQL (libpq integration)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: pscript_ci_pg_secret
+          POSTGRES_DB: pscript_registry_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PSCRIPT_REGISTRY_POSTGRES_TEST_URL: postgresql://postgres:pscript_ci_pg_secret@localhost:5432/pscript_registry_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build pkg-config \
+            libssl-dev libsqlite3-dev libpq-dev
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DPSCRIPT_REGISTRY_POSTGRES_TEST_URL="$PSCRIPT_REGISTRY_POSTGRES_TEST_URL"
+
+      - name: Build registry postgres tests
+        run: cmake --build build --target pscript_registry_postgres_tests --parallel
+
+      - name: PostgreSQL integration tests
+        run: ctest --test-dir build -L postgres --output-on-failure --timeout 120

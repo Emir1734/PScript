@@ -23,7 +23,6 @@
 *.dll
 *.so.*
 
-
 # Fortran module files
 *.mod
 *.smod
@@ -43,6 +42,7 @@
 build/
 Build/
 build-*/
+out/
 
 # CMake generated files
 CMakeFiles/
@@ -67,3 +67,64 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# Release packaging output
+dist/
+
+# IDE / editor local
+.cursor/
+.vscode/
+*.user
+*.suo
+
+# Node (VS Code extension); ship sources, not installed modules
+editors/vscode/node_modules/
+editors/vscode/.vscode-test/
+editors/vscode/_forensics/
+editors/vscode/_pkg/
+editors/vscode/_vsix_tmp/
+editors/vscode/out/
+editors/vscode/dist/
+
+# Local benchmark and investigation artifacts (not shipped)
+bench_*
+bench.csv
+bench_groups*/
+bench_phase*/
+benchmarks/**/*.json
+!benchmarks/crosslang/
+
+# Local debug / repro logs at repo root
+_*.txt
+_*.phs
+tmp_*
+*.pid
+*.pid.meta
+test.phs
+
+# Local performance / readiness reports at repo root
+*_report.md
+*_report_data.txt
+*_final_report.md
+*_final_report_data.txt
+optimization_reliability_*
+ultimate_quality_*
+pscript_1_0_*
+closure_nested_divmod_*
+set_h_benchmark.txt
+
+# Ephemeral local test dirs
+pscript_init_test/
+
+# Package manager sandboxes created during dev
+.pscript/
+
+# Cross-language benchmark build outputs
+benchmarks/**/obj/
+benchmarks/**/bin/
+benchmarks/**/*.cache
+benchmarks/**/set_*_results.txt
+
+# Large vendored archives (sources are extracted under deps/)
+deps/miniz.zip
+deps/miniz_full/

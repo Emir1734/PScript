@@ -1,0 +1,4 @@
+import inner
+
+func greet():
+    return inner.message

@@ -1,0 +1,32 @@
+{
+  "Function (colon block)": {
+    "prefix": "func",
+    "body": ["func ${1:name}(${2:args}):", "    ${3:pass}"],
+    "description": "Function with colon block"
+  },
+  "Function (brace block)": {
+    "prefix": "funcb",
+    "body": ["func ${1:name}(${2:args}) {", "    ${3:pass}", "}"],
+    "description": "Function with brace block"
+  },
+  "If (colon)": {
+    "prefix": "if",
+    "body": ["if ${1:condition}:", "    ${2:pass}"],
+    "description": "If with colon block"
+  },
+  "If (braces)": {
+    "prefix": "ifb",
+    "body": ["if ${1:condition} {", "    ${2:pass}", "}"],
+    "description": "If with brace block"
+  },
+  "Class": {
+    "prefix": "class",
+    "body": ["class ${1:Name}:", "    func ${2:method}():", "        ${3:pass}"],
+    "description": "Class definition"
+  },
+  "Import": {
+    "prefix": "import",
+    "body": ["import ${1:module}"],
+    "description": "Import module"
+  }
+}

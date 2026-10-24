@@ -1,0 +1,203 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "PScript",
+  "scopeName": "source.pscript",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#annotations" },
+    { "include": "#declarations" },
+    { "include": "#type-hints" },
+    { "include": "#generics" },
+    { "include": "#keywords-control" },
+    { "include": "#keywords-statement" },
+    { "include": "#keywords-declaration" },
+    { "include": "#keywords-modifier" },
+    { "include": "#constants-literal" },
+    { "include": "#types-builtin" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.pscript",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.pscript",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "name": "constant.character.escape.pscript", "match": "\\\\." }]
+        },
+        {
+          "name": "string.quoted.single.pscript",
+          "begin": "'",
+          "end": "'",
+          "patterns": [{ "name": "constant.character.escape.pscript", "match": "\\\\." }]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.pscript",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "annotations": {
+      "patterns": [
+        {
+          "name": "entity.other.annotation.pscript",
+          "match": "@[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "name": "meta.class.declaration.pscript",
+          "match": "\\b(class|struct|record|enum|interface|protocol)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.pscript" },
+            "2": { "name": "entity.name.type.class.pscript" }
+          }
+        },
+        {
+          "name": "meta.function.declaration.pscript",
+          "match": "\\b(func|constructor)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.pscript" },
+            "2": { "name": "entity.name.function.pscript" }
+          }
+        },
+        {
+          "name": "meta.import.declaration.pscript",
+          "match": "\\b(import|from)\\s+([A-Za-z_][A-Za-z0-9_.]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.pscript" },
+            "2": { "name": "entity.name.namespace.pscript" }
+          }
+        }
+      ]
+    },
+    "type-hints": {
+      "patterns": [
+        {
+          "name": "meta.type.annotation.pscript",
+          "match": "(:|->)\\s*([A-Za-z_][A-Za-z0-9_]*(?:\\s*\\|\\s*[A-Za-z_][A-Za-z0-9_]*)*)",
+          "captures": {
+            "1": { "name": "keyword.operator.typehint.pscript" },
+            "2": { "patterns": [{ "include": "#type-name" }] }
+          }
+        },
+        {
+          "name": "meta.parameter.pscript",
+          "match": "\\(([A-Za-z_][A-Za-z0-9_]*)\\s*:",
+          "captures": {
+            "1": { "name": "variable.parameter.pscript" }
+          }
+        },
+        {
+          "name": "meta.parameter.pscript",
+          "match": ",\\s*([A-Za-z_][A-Za-z0-9_]*)\\s*:",
+          "captures": {
+            "1": { "name": "variable.parameter.pscript" }
+          }
+        }
+      ]
+    },
+    "type-name": {
+      "patterns": [
+        {
+          "name": "support.type.pscript",
+          "match": "\\b(int|float|bool|string|void|any|list|dict|object)\\b"
+        },
+        {
+          "name": "entity.name.type.pscript",
+          "match": "[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "generics": {
+      "patterns": [
+        {
+          "begin": "<",
+          "end": ">",
+          "name": "meta.generic.pscript",
+          "patterns": [
+            { "include": "#type-name" },
+            { "include": "#keywords-modifier" },
+            { "match": ",", "name": "punctuation.separator.generic.pscript" }
+          ]
+        }
+      ]
+    },
+    "keywords-control": {
+      "patterns": [
+        {
+          "name": "keyword.control.pscript",
+          "match": "\\b(if|elif|elseif|else|for|while|with|in|match|and|or|not)\\b"
+        }
+      ]
+    },
+    "keywords-statement": {
+      "patterns": [
+        {
+          "name": "keyword.statement.pscript",
+          "match": "\\b(return|break|continue|throw|try|catch|finally|pass|await|async)\\b"
+        }
+      ]
+    },
+    "keywords-declaration": {
+      "patterns": [
+        {
+          "name": "keyword.declaration.pscript",
+          "match": "\\b(func|class|struct|record|enum|interface|protocol|import|from|as|const|constructor|this|super|parent|input)\\b"
+        }
+      ]
+    },
+    "keywords-modifier": {
+      "patterns": [
+        {
+          "name": "storage.modifier.pscript",
+          "match": "\\b(public|pub|private|priv|protected|prot)\\b"
+        }
+      ]
+    },
+    "constants-literal": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.pscript",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "constant.language.null.pscript",
+          "match": "\\bnull\\b"
+        }
+      ]
+    },
+    "types-builtin": {
+      "patterns": [
+        {
+          "name": "support.type.pscript",
+          "match": "\\b(int|float|bool|string|void|any|list|dict|object)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.pscript",
+          "match": "(==|!=|<=|>=|->|=>|\\+\\+|--|\\+=|-=|\\*=|/=|%=|&&|\\|\\||\\|\\||\\?|:|\\.|,|[+\\-*/%<>])"
+        }
+      ]
+    }
+  }
+}

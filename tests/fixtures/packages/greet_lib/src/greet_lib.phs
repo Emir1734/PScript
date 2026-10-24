@@ -1,0 +1,2 @@
+pub func greet():
+    return "hello-package"

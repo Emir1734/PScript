@@ -1,0 +1,18 @@
+# Local production-style Registry reverse proxy (TLS with internal CA).
+# Bind public HTTPS on localhost only; Registry listens on a private port.
+#
+#   caddy run --config deploy/registry/Caddyfile
+#
+# Requires `pscript_registry_server` on 127.0.0.1:8741 with PSCRIPT_REGISTRY_ALLOW_PUBLIC_BIND unset.
+
+{
+    auto_https disable_redirects
+}
+
+https://registry.localhost {
+    tls internal
+    reverse_proxy 127.0.0.1:8741 {
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}

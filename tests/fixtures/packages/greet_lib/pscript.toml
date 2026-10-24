@@ -1,0 +1,4 @@
+[project]
+name = "greet_lib"
+version = "1.0.0"
+description = "Test helper package"

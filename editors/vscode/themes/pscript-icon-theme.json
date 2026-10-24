@@ -1,0 +1,13 @@
+{
+  "iconDefinitions": {
+    "_pscript_file": {
+      "iconPath": "./assets/icon.png"
+    }
+  },
+  "fileExtensions": {
+    "phs": "_pscript_file"
+  },
+  "languageIds": {
+    "pscript": "_pscript_file"
+  }
+}

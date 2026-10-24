@@ -1,0 +1,4 @@
+from math import add, subtract
+
+print(add(5, 2))
+print(subtract(5, 2))

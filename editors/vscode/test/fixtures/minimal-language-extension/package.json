@@ -1,0 +1,27 @@
+{
+  "name": "pscript-minimal-lang-test",
+  "displayName": "PScript Minimal Lang Test",
+  "version": "0.0.1",
+  "publisher": "pscript",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "scripts": {},
+  "contributes": {
+    "languages": [
+      {
+        "id": "pscript",
+        "aliases": ["PScript", "pscript"],
+        "extensions": [".phs"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pscript",
+        "scopeName": "source.pscript",
+        "path": "./syntaxes/pscript.tmLanguage.json"
+      }
+    ]
+  }
+}

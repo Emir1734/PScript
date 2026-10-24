@@ -1,0 +1,155 @@
+#pragma once
+
+#include "runtime/runtime.h"
+
+#include <vector>
+
+namespace pscript {
+
+Value native_path_join(const std::vector<Value>& args);
+Value native_path_basename(const std::vector<Value>& args);
+Value native_path_dirname(const std::vector<Value>& args);
+Value native_path_extension(const std::vector<Value>& args);
+Value native_path_stem(const std::vector<Value>& args);
+Value native_path_normalize(const std::vector<Value>& args);
+Value native_path_absolute(const std::vector<Value>& args);
+Value native_path_resolve(const std::vector<Value>& args);
+Value native_path_is_absolute(const std::vector<Value>& args);
+Value native_path_is_relative(const std::vector<Value>& args);
+Value native_path_relative(const std::vector<Value>& args);
+Value native_fs_exists(const std::vector<Value>& args);
+Value native_fs_is_file(const std::vector<Value>& args);
+Value native_fs_is_dir(const std::vector<Value>& args);
+Value native_fs_read(const std::vector<Value>& args);
+Value native_fs_write(const std::vector<Value>& args);
+Value native_fs_append(const std::vector<Value>& args);
+Value native_fs_copy(const std::vector<Value>& args);
+Value native_fs_move(const std::vector<Value>& args);
+Value native_fs_remove(const std::vector<Value>& args);
+Value native_fs_create_dir(const std::vector<Value>& args);
+Value native_fs_remove_dir(const std::vector<Value>& args);
+Value native_fs_list_dir(const std::vector<Value>& args);
+Value native_fs_async_read(Runtime& runtime, const std::vector<Value>& args);
+Value native_fs_async_write(Runtime& runtime, const std::vector<Value>& args);
+Value native_fs_async_append(Runtime& runtime, const std::vector<Value>& args);
+Value native_io_open(const std::vector<Value>& args);
+Value native_os_name(const std::vector<Value>& args);
+Value native_os_platform(const std::vector<Value>& args);
+Value native_os_arch(const std::vector<Value>& args);
+Value native_os_cwd(const std::vector<Value>& args);
+Value native_os_chdir(const std::vector<Value>& args);
+Value native_os_env(const std::vector<Value>& args);
+Value native_os_set_env(const std::vector<Value>& args);
+Value native_os_remove_env(const std::vector<Value>& args);
+Value native_os_has_env(const std::vector<Value>& args);
+Value native_os_home_dir(const std::vector<Value>& args);
+Value native_os_temp_dir(const std::vector<Value>& args);
+Value native_process_id(const std::vector<Value>& args);
+Value native_process_exit(Runtime& runtime, const std::vector<Value>& args);
+Value native_process_run(const std::vector<Value>& args);
+Value native_datetime_now(const std::vector<Value>& args);
+Value native_datetime_today(const std::vector<Value>& args);
+Value native_datetime_utc_now(const std::vector<Value>& args);
+Value native_datetime_from_unix(const std::vector<Value>& args);
+Value native_datetime_create(const std::vector<Value>& args);
+Value native_datetime_parse(const std::vector<Value>& args);
+Value native_datetime_format_method(const Value& object, const std::vector<Value>& args);
+Value native_time_now(const std::vector<Value>& args);
+Value native_time_unix(const std::vector<Value>& args);
+Value native_time_monotonic(const std::vector<Value>& args);
+Value native_time_sleep(const std::vector<Value>& args);
+Value native_random_int(const std::vector<Value>& args);
+Value native_random_float(const std::vector<Value>& args);
+Value native_random_choice(const std::vector<Value>& args);
+Value native_random_shuffle(const std::vector<Value>& args);
+Value native_random_seed(const std::vector<Value>& args);
+Value native_json_encode(const std::vector<Value>& args);
+Value native_json_decode(const std::vector<Value>& args);
+Value native_json_read(const std::vector<Value>& args);
+Value native_json_write(const std::vector<Value>& args);
+Value native_json_valid(const std::vector<Value>& args);
+Value native_re_is_match(const std::vector<Value>& args);
+Value native_re_search(const std::vector<Value>& args);
+Value native_re_find_all(const std::vector<Value>& args);
+Value native_re_replace(const std::vector<Value>& args);
+Value native_re_split(const std::vector<Value>& args);
+Value native_encoding_encode(const std::vector<Value>& args);
+Value native_encoding_decode(const std::vector<Value>& args);
+Value native_net_connect(Runtime& runtime, const std::vector<Value>& args);
+Value native_net_listen(Runtime& runtime, const std::vector<Value>& args);
+Value native_net_udp(Runtime& runtime, const std::vector<Value>& args);
+Value native_net_resolve(Runtime& runtime, const std::vector<Value>& args);
+Value native_http_get(Runtime& runtime, const std::vector<Value>& args);
+Value native_http_post(Runtime& runtime, const std::vector<Value>& args);
+Value native_http_request(Runtime& runtime, const std::vector<Value>& args);
+Value native_http_server(Runtime& runtime, const std::vector<Value>& args);
+Value native_log_debug(Runtime& runtime, const std::vector<Value>& args);
+Value native_log_info(Runtime& runtime, const std::vector<Value>& args);
+Value native_log_warning(Runtime& runtime, const std::vector<Value>& args);
+Value native_log_error(Runtime& runtime, const std::vector<Value>& args);
+Value native_log_set_level(Runtime& runtime, const std::vector<Value>& args);
+Value native_crypto_sha256(const std::vector<Value>& args);
+Value native_crypto_sha512(const std::vector<Value>& args);
+Value native_crypto_sha3_256(const std::vector<Value>& args);
+Value native_crypto_sha3_512(const std::vector<Value>& args);
+Value native_crypto_blake2b(const std::vector<Value>& args);
+Value native_crypto_blake2s(const std::vector<Value>& args);
+Value native_crypto_hmac_sha256(const std::vector<Value>& args);
+Value native_crypto_hmac_sha512(const std::vector<Value>& args);
+Value native_crypto_random_bytes(const std::vector<Value>& args);
+Value native_crypto_compare(const std::vector<Value>& args);
+Value native_crypto_hasher(const std::vector<Value>& args);
+Value native_crypto_hash_file(const std::vector<Value>& args);
+Value native_crypto_hash_io(Runtime& runtime, const std::vector<Value>& args);
+Value native_crypto_pbkdf2_sha256(const std::vector<Value>& args);
+Value native_crypto_scrypt(const std::vector<Value>& args);
+Value native_crypto_argon2id(const std::vector<Value>& args);
+Value native_crypto_encrypt_aes_gcm(const std::vector<Value>& args);
+Value native_crypto_decrypt_aes_gcm(const std::vector<Value>& args);
+Value native_crypto_encrypt_chacha20_poly1305(const std::vector<Value>& args);
+Value native_crypto_decrypt_chacha20_poly1305(const std::vector<Value>& args);
+Value call_native_crypto_hasher_method(const Value& object, std::string_view name, const std::vector<Value>& args);
+bool is_native_crypto_hasher(const Value& object);
+Value call_native_http_method(const Value& object, std::string_view name, const std::vector<Value>& args,
+                              Runtime& runtime);
+bool is_native_http_server(const Value& object);
+
+Value native_testing_equal(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_not_equal(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_true(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_false(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_null(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_not_null(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_throws(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_fail(Runtime& runtime, const std::vector<Value>& args);
+Value native_testing_run(Runtime& runtime, const std::vector<Value>& args);
+
+Value native_cli_args(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_arg(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_option(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_flag(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_has(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_command(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_help(Runtime& runtime, const std::vector<Value>& args);
+Value native_cli_version(Runtime& runtime, const std::vector<Value>& args);
+
+Value native_url_parse(const std::vector<Value>& args);
+Value native_url_build(const std::vector<Value>& args);
+Value native_url_join(const std::vector<Value>& args);
+Value native_url_encode(const std::vector<Value>& args);
+Value native_url_decode(const std::vector<Value>& args);
+Value native_url_parse_query(const std::vector<Value>& args);
+Value native_url_build_query(const std::vector<Value>& args);
+Value native_uuid_v4(const std::vector<Value>& args);
+Value native_uuid_v7(const std::vector<Value>& args);
+Value native_uuid_parse(const std::vector<Value>& args);
+Value native_csv_parse(const std::vector<Value>& args);
+Value native_csv_stringify(const std::vector<Value>& args);
+Value native_csv_reader(const std::vector<Value>& args);
+Value native_csv_writer(const std::vector<Value>& args);
+Value native_xml_parse(const std::vector<Value>& args);
+Value native_xml_stringify(const std::vector<Value>& args);
+Value native_archive_open(Runtime& runtime, const std::vector<Value>& args);
+Value native_archive_create(Runtime& runtime, const std::vector<Value>& args);
+
+}  // namespace pscript

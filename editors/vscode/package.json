@@ -1,0 +1,419 @@
+{
+  "name": "pscript",
+  "displayName": "PScript",
+  "description": "PScript language support with LSP-backed IntelliSense",
+  "version": "0.1.0",
+  "publisher": "pscript",
+  "icon": "assets/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:**/*.phs"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "pscript",
+        "aliases": [
+          "PScript",
+          "pscript"
+        ],
+        "extensions": [
+          ".phs"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./assets/icon.png",
+          "dark": "./assets/icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pscript",
+        "scopeName": "source.pscript",
+        "path": "./syntaxes/pscript.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "pscript",
+        "path": "./snippets/pscript.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "pscript-icons",
+        "label": "PScript",
+        "path": "./themes/pscript-icon-theme.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "pscript.restartLanguageServer",
+        "title": "PScript: Restart Language Server",
+        "category": "PScript"
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "pscript",
+        "scopes": {
+          "class": [
+            "entity.name.type.class.pscript"
+          ],
+          "struct": [
+            "entity.name.type.class.pscript"
+          ],
+          "interface": [
+            "entity.name.type.class.pscript"
+          ],
+          "enum": [
+            "entity.name.type.class.pscript"
+          ],
+          "type": [
+            "entity.name.type.pscript",
+            "support.type.pscript"
+          ],
+          "function": [
+            "entity.name.function.pscript"
+          ],
+          "method": [
+            "entity.name.function.pscript"
+          ],
+          "parameter": [
+            "variable.parameter.pscript"
+          ],
+          "variable": [
+            "variable.other.readwrite.pscript"
+          ],
+          "property": [
+            "variable.other.property.pscript"
+          ],
+          "namespace": [
+            "entity.name.namespace.pscript"
+          ],
+          "keyword": [
+            "keyword.control.pscript",
+            "keyword.other.pscript"
+          ],
+          "string": [
+            "string.quoted.double.pscript"
+          ],
+          "number": [
+            "constant.numeric.pscript"
+          ],
+          "operator": [
+            "keyword.operator.pscript"
+          ]
+        }
+      }
+    ],
+    "configuration": {
+      "title": "PScript",
+      "properties": {
+        "pscript.languageServer.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to pscript_lsp executable. Supports ${workspaceFolder}. When empty, searches build/Debug/pscript_lsp.exe under the workspace. Overrides PSCRIPT_LSP."
+        },
+        "pscript.languageServer.preferWorkspaceDebug": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true, prefer build/Debug/pscript_lsp over build/Release when resolving the workspace language server."
+        },
+        "pscript.languageServer.useRuntimeCopy": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true, run the language server from a copy in extension global storage so CMake can rebuild pscript_lsp_compile.exe while the IDE is open."
+        },
+        "pscript.debugAdapter.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to pscript_dap executable. When empty, searches build/Debug or build/Release under the workspace."
+        },
+        "pscript.languageServer.trace": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "LSP trace logging."
+        },
+        "pscript.languageServer.logCompletion": {
+          "type": "boolean",
+          "default": false,
+          "description": "Log each completion response (labels/kinds) to the PScript Language Server output channel. Sets PSCRIPT_LSP_LOG_COMPLETION on the server process."
+        },
+        "pscript.autoSelectIconTheme": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, set File Icon Theme to PScript if no icon theme is selected yet."
+        }
+      }
+    },
+    "debuggers": [
+      {
+        "type": "pscript",
+        "label": "PScript Debug",
+        "languages": [
+          "pscript"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to the .phs file to debug",
+                "default": "${file}"
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Working directory for the debug session",
+                "default": "${workspaceFolder}"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "pscript",
+            "request": "launch",
+            "name": "Debug PScript File",
+            "program": "${file}"
+          }
+        ]
+      }
+    ],
+    "configurationDefaults": {
+      "[pscript]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.quickSuggestions": {
+          "other": "on",
+          "comments": "off",
+          "strings": "off"
+        },
+        "editor.suggestOnTriggerCharacters": true,
+        "editor.wordBasedSuggestions": "off",
+        "editor.suggest.insertMode": "replace",
+        "editor.tabCompletion": "on"
+      },
+      "editor.tokenColorCustomizations": {
+        "[Default Dark+]": {
+          "textMateRules": [
+            {
+              "scope": "source.pscript keyword.control.pscript",
+              "settings": {
+                "foreground": "#C586C0"
+              }
+            },
+            {
+              "scope": "source.pscript keyword.statement.pscript",
+              "settings": {
+                "foreground": "#C586C0"
+              }
+            },
+            {
+              "scope": "source.pscript keyword.declaration.pscript",
+              "settings": {
+                "foreground": "#569CD6"
+              }
+            },
+            {
+              "scope": "source.pscript storage.modifier.pscript",
+              "settings": {
+                "foreground": "#569CD6"
+              }
+            },
+            {
+              "scope": "source.pscript support.type.pscript, source.pscript entity.name.type.pscript, source.pscript entity.name.type.class.pscript",
+              "settings": {
+                "foreground": "#4EC9B0"
+              }
+            },
+            {
+              "scope": "source.pscript entity.name.function.pscript",
+              "settings": {
+                "foreground": "#DCDCAA"
+              }
+            },
+            {
+              "scope": "source.pscript variable.parameter.pscript",
+              "settings": {
+                "foreground": "#9CDCFE"
+              }
+            },
+            {
+              "scope": "source.pscript string.quoted.double.pscript, source.pscript string.quoted.single.pscript",
+              "settings": {
+                "foreground": "#CE9178"
+              }
+            },
+            {
+              "scope": "source.pscript constant.numeric.pscript",
+              "settings": {
+                "foreground": "#B5CEA8"
+              }
+            },
+            {
+              "scope": "source.pscript constant.language.boolean.pscript, source.pscript constant.language.null.pscript",
+              "settings": {
+                "foreground": "#569CD6"
+              }
+            },
+            {
+              "scope": "source.pscript comment.line.number-sign.pscript",
+              "settings": {
+                "foreground": "#6A9955"
+              }
+            },
+            {
+              "scope": "source.pscript entity.other.annotation.pscript",
+              "settings": {
+                "foreground": "#DCDCAA"
+              }
+            },
+            {
+              "scope": "source.pscript keyword.operator.pscript, source.pscript keyword.operator.typehint.pscript",
+              "settings": {
+                "foreground": "#D4D4D4"
+              }
+            }
+          ]
+        },
+        "[Default Dark Modern]": {
+          "textMateRules": [
+            {
+              "scope": "source.pscript keyword.control.pscript, source.pscript keyword.statement.pscript",
+              "settings": {
+                "foreground": "#C586C0"
+              }
+            },
+            {
+              "scope": "source.pscript keyword.declaration.pscript, source.pscript storage.modifier.pscript, source.pscript constant.language.boolean.pscript, source.pscript constant.language.null.pscript",
+              "settings": {
+                "foreground": "#569CD6"
+              }
+            },
+            {
+              "scope": "source.pscript support.type.pscript, source.pscript entity.name.type.pscript, source.pscript entity.name.type.class.pscript",
+              "settings": {
+                "foreground": "#4EC9B0"
+              }
+            },
+            {
+              "scope": "source.pscript entity.name.function.pscript, source.pscript entity.other.annotation.pscript",
+              "settings": {
+                "foreground": "#DCDCAA"
+              }
+            },
+            {
+              "scope": "source.pscript variable.parameter.pscript",
+              "settings": {
+                "foreground": "#9CDCFE"
+              }
+            },
+            {
+              "scope": "source.pscript string.quoted.double.pscript, source.pscript string.quoted.single.pscript",
+              "settings": {
+                "foreground": "#CE9178"
+              }
+            },
+            {
+              "scope": "source.pscript constant.numeric.pscript",
+              "settings": {
+                "foreground": "#B5CEA8"
+              }
+            },
+            {
+              "scope": "source.pscript comment.line.number-sign.pscript",
+              "settings": {
+                "foreground": "#6A9955"
+              }
+            },
+            {
+              "scope": "source.pscript keyword.operator.pscript",
+              "settings": {
+                "foreground": "#D4D4D4"
+              }
+            }
+          ]
+        }
+      },
+      "editor.semanticTokenColorCustomizations": {
+        "[Default Dark+]": {
+          "enabled": true,
+          "rules": {
+            "class": "#4EC9B0",
+            "struct": "#4EC9B0",
+            "interface": "#4EC9B0",
+            "enum": "#4EC9B0",
+            "type": "#4EC9B0",
+            "typeParameter": "#4EC9B0",
+            "function": "#DCDCAA",
+            "method": "#DCDCAA",
+            "parameter": "#9CDCFE",
+            "variable": "#9CDCFE",
+            "property": "#9CDCFE",
+            "namespace": "#4EC9B0"
+          }
+        },
+        "[Default Dark Modern]": {
+          "enabled": true,
+          "rules": {
+            "class": "#4EC9B0",
+            "struct": "#4EC9B0",
+            "interface": "#4EC9B0",
+            "enum": "#4EC9B0",
+            "type": "#4EC9B0",
+            "function": "#DCDCAA",
+            "method": "#DCDCAA",
+            "parameter": "#9CDCFE",
+            "variable": "#9CDCFE",
+            "property": "#9CDCFE"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "prepare-assets": "node ./scripts/prepare-assets.js",
+    "test": "npm run compile && node ./test/run-tests.js",
+    "package": "npm run compile && npm run prepare-assets && vsce package --allow-missing-repository",
+    "install-local": "npm run package && code --install-extension pscript-0.1.0.vsix --force && cursor --install-extension pscript-0.1.0.vsix --force",
+    "vscode:prepublish": "npm run compile"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^2.24.0",
+    "typescript": "^5.4.0",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.1.0"
+  }
+}

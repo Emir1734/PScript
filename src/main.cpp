@@ -1,6 +1,5 @@
-#include <iostream>
+#include "cli/cli.h"
 
-int main() {
-    std::cout << "PScript\n";
-    return 0;
+int main(int argc, char** argv) {
+    return pscript::run_cli(argc, argv);
 }

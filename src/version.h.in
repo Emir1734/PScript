@@ -1,0 +1,7 @@
+#pragma once
+
+namespace pscript {
+
+inline constexpr const char* kPscriptVersion = "@PSCRIPT_VERSION_STRING@";
+
+}  // namespace pscript
