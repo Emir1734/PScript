@@ -7,6 +7,7 @@
 #include <limits>
 
 #if defined(PSCRIPT_HAS_OPENSSL)
+#include <openssl/core_names.h>
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
