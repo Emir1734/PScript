@@ -366,10 +366,15 @@ std::optional<PipeProcess> spawn_lsp(const char* exe_path) {
     posix_spawn_file_actions_adddup2(&actions, stdout_pipe[1], STDOUT_FILENO);
     posix_spawn_file_actions_addclose(&actions, stdin_pipe[0]);
     posix_spawn_file_actions_addclose(&actions, stdout_pipe[1]);
+    posix_spawnattr_t spawn_attr;
+    posix_spawnattr_init(&spawn_attr);
+#ifdef POSIX_SPAWN_CLOEXEC_DEFAULT
+    posix_spawnattr_setflags(&spawn_attr, POSIX_SPAWN_CLOEXEC_DEFAULT);
+#endif
     char* const argv[] = {const_cast<char*>(exe_path), nullptr};
     pid_t pid = -1;
-    const int spawn_status =
-        posix_spawn(&pid, exe_path, &actions, nullptr, argv, environ);
+    const int spawn_status = posix_spawn(&pid, exe_path, &actions, &spawn_attr, argv, environ);
+    posix_spawnattr_destroy(&spawn_attr);
     posix_spawn_file_actions_destroy(&actions);
     close(stdin_pipe[0]);
     close(stdout_pipe[1]);
