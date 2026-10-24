@@ -4,6 +4,7 @@
 #include "stdlib/archive/archive_security.h"
 
 #include <array>
+#include <atomic>
 #include <chrono>
 #include <cstring>
 #include <filesystem>

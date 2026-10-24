@@ -137,10 +137,11 @@ std::vector<std::uint8_t> scrypt_openssl(const std::uint8_t* password, std::size
     return out;
 }
 
+#if !defined(PSCRIPT_HAS_LIBARGON2)
 std::vector<std::uint8_t> argon2id_openssl(const std::uint8_t* password, std::size_t password_length,
                                             const std::uint8_t* salt, std::size_t salt_length,
                                             const CryptoKdfArgon2Params& params, std::size_t output_length) {
-#if OPENSSL_VERSION_NUMBER >= 0x30200000L
+#if OPENSSL_VERSION_NUMBER >= 0x30200000L && defined(OSSL_KDF_PARAM_SECRET)
     EVP_KDF* kdf = EVP_KDF_fetch(nullptr, "ARGON2ID", nullptr);
     if (kdf == nullptr) {
         crypto_fail("Argon2id is not available in this OpenSSL build");
@@ -172,6 +173,7 @@ std::vector<std::uint8_t> argon2id_openssl(const std::uint8_t* password, std::si
     crypto_fail("Argon2id requires OpenSSL 3.2 or newer");
 #endif
 }
+#endif  // !PSCRIPT_HAS_LIBARGON2
 
 const EVP_CIPHER* aes_gcm_cipher_for_key_length(std::size_t key_length) {
     switch (key_length) {
