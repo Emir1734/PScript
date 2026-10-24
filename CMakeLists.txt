@@ -725,6 +725,7 @@ set_target_properties(crosslang_pscript PROPERTIES
 add_test(NAME analysis COMMAND pscript_analysis_tests)
 add_test(NAME lsp COMMAND pscript_lsp_tests)
 add_test(NAME lsp_server_stdio COMMAND pscript_lsp_server_stdio_tests)
+set_tests_properties(lsp_server_stdio PROPERTIES WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 add_test(NAME dap_stdio COMMAND pscript_dap_stdio_tests)
 add_test(NAME cli COMMAND pscript_cli_tests)
 add_test(NAME package COMMAND pscript_package_tests)

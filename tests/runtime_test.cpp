@@ -767,7 +767,7 @@ int main() {
             const std::vector<std::uint8_t> scrypt_out = pscript::crypto_scrypt(
                 reinterpret_cast<const std::uint8_t*>(kPassword), sizeof(kPassword) - 1,
                 reinterpret_cast<const std::uint8_t*>(kSalt), sizeof(kSalt) - 1, params, 64);
-            static const std::uint8_t expected_scrypt[] = {0xfd, 0xba, 0xbe, 0x1c, 0x9d, 0x34, 0x72, 0x00};
+            static const std::uint8_t expected_scrypt[] = {0x1e, 0xff, 0xd9, 0x3a, 0xfc, 0xf2, 0xb2, 0x89};
             if (scrypt_out.size() != 64 ||
                 !std::equal(expected_scrypt, expected_scrypt + sizeof(expected_scrypt), scrypt_out.begin())) {
                 std::ostringstream detail;

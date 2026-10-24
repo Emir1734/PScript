@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cstdlib>
+#include <filesystem>
 #include <functional>
 #include <thread>
 #include <iostream>
@@ -460,12 +461,40 @@ bool run_stdio_tests(const char* exe) {
 
 }  // namespace
 
-int main() {
-#ifndef PSCRIPT_LSP_EXE
-    fail("lsp_server_stdio", "PSCRIPT_LSP_EXE not defined");
-    return 1;
+std::string resolve_lsp_executable() {
+#ifdef PSCRIPT_LSP_EXE
+    const std::filesystem::path configured(PSCRIPT_LSP_EXE);
+    if (std::filesystem::exists(configured)) {
+        return std::filesystem::absolute(configured).string();
+    }
+#endif
+    const std::filesystem::path candidates[] = {
+        std::filesystem::path("bin/pscript_lsp_compile"),
+        std::filesystem::path("bin/pscript_lsp"),
+        std::filesystem::path("bin/RELEASE/pscript_lsp_compile"),
+        std::filesystem::path("bin/RELEASE/pscript_lsp"),
+        std::filesystem::path("pscript_lsp_compile"),
+        std::filesystem::path("pscript_lsp"),
+    };
+    for (const std::filesystem::path& candidate : candidates) {
+        if (std::filesystem::exists(candidate)) {
+            return std::filesystem::absolute(candidate).string();
+        }
+    }
+#ifdef PSCRIPT_LSP_EXE
+    return configured.string();
 #else
-    if (!run_stdio_tests(PSCRIPT_LSP_EXE)) {
+    return {};
+#endif
+}
+
+int main() {
+    const std::string lsp_exe = resolve_lsp_executable();
+    if (lsp_exe.empty() || !std::filesystem::exists(lsp_exe)) {
+        fail("lsp_server_stdio", "LSP executable not found");
+        return 1;
+    }
+    if (!run_stdio_tests(lsp_exe.c_str())) {
         return 1;
     }
     if (g_failed != 0) {
@@ -473,5 +502,4 @@ int main() {
     }
     std::cout << "All lsp server process tests passed\n";
     return 0;
-#endif
 }
