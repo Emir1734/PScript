@@ -1,5 +1,6 @@
 #include "compiler/compiler.h"
 #include "parser/parser.h"
+#include "runtime/crypto_kdf_cipher.h"
 #include "runtime/runtime.h"
 #include "stdlib/native_boundary.h"
 #include "vm/vm.h"
@@ -3506,16 +3507,20 @@ int main() {
                           "    crypto.decrypt_aes_gcm(key, nonce, enc[\"ciphertext\"], bad, null)\n"
                           "catch ValueException error:\n    print(error.message)\n",
                           "authentication failed\n");
-    expect_output("stdlib crypto chacha roundtrip",
-                  "import crypto\nkey = crypto.random_bytes(32)\nnonce = crypto.random_bytes(12)\n"
-                  "enc = crypto.encrypt_chacha20_poly1305(key, nonce, \"data\", null)\n"
-                  "pt = crypto.decrypt_chacha20_poly1305(key, nonce, enc[\"ciphertext\"], enc[\"tag\"], null)\n"
-                  "print(pt.length())\n",
-                  "4\n");
+    if (pscript::crypto_aead_chacha20_poly1305_available()) {
+        expect_output("stdlib crypto chacha roundtrip",
+                      "import crypto\nkey = crypto.random_bytes(32)\nnonce = crypto.random_bytes(12)\n"
+                      "enc = crypto.encrypt_chacha20_poly1305(key, nonce, \"data\", null)\n"
+                      "pt = crypto.decrypt_chacha20_poly1305(key, nonce, enc[\"ciphertext\"], enc[\"tag\"], null)\n"
+                      "print(pt.length())\n",
+                      "4\n");
+    }
+#if !defined(PSCRIPT_HAS_OPENSSL)
     expect_builtin_output("stdlib crypto scrypt unavailable without openssl",
                           "import crypto\ntry:\n    crypto.scrypt(\"p\", \"s\", 32, null)\n"
                           "catch ValueException error:\n    print(error.message)\n",
                           "scrypt requires an OpenSSL-enabled build\n");
+#endif
 
     expect_output("stdlib sql module import", "import sql\nprint(\"sql\")\n", "sql\n");
     expect_output("stdlib sql memory open",
@@ -3767,7 +3772,7 @@ int main() {
 
 #if defined(PSCRIPT_HAS_OPENSSL)
     expect_output("stdlib crypto blake2b empty",
-                  "import crypto\nh = crypto.blake2b(\"\")\nprint(h.length())\nprint(h[0])\n", "64\n191\n");
+                  "import crypto\nh = crypto.blake2b(\"\")\nprint(h.length())\nprint(h[0])\n", "64\n120\n");
 #endif
 
     expect_output("stdlib log module import", "import log\nprint(\"log\")\n", "log\n");

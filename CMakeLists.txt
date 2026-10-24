@@ -486,7 +486,7 @@ add_executable(pscript_lsp_server_stdio_tests
 target_link_libraries(pscript_lsp_server_stdio_tests PRIVATE pscript_analysis)
 target_include_directories(pscript_lsp_server_stdio_tests PRIVATE src ${CMAKE_BINARY_DIR}/generated)
 target_compile_definitions(pscript_lsp_server_stdio_tests PRIVATE
-    PSCRIPT_LSP_EXE="$<TARGET_FILE_DIR:pscript_lsp>/${PSCRIPT_LSP_CANONICAL_NAME}")
+    PSCRIPT_LSP_EXE="$<TARGET_FILE:pscript_lsp>")
 add_dependencies(pscript_lsp_server_stdio_tests pscript_lsp)
 
 add_executable(pscript_dap

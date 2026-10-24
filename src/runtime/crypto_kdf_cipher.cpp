@@ -340,6 +340,7 @@ std::vector<std::uint8_t> chacha_decrypt_openssl(const std::uint8_t* key, std::s
     }
     std::vector<std::uint8_t> plaintext(ciphertext_length);
     int out_len = 0;
+    int final_len = 0;
     if (EVP_DecryptInit_ex(ctx, EVP_chacha20_poly1305(), nullptr, nullptr, nullptr) != 1 ||
         EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, static_cast<int>(nonce_length), nullptr) != 1 ||
         EVP_DecryptInit_ex(ctx, nullptr, nullptr, key, nonce) != 1) {
@@ -363,12 +364,12 @@ std::vector<std::uint8_t> chacha_decrypt_openssl(const std::uint8_t* key, std::s
         EVP_CIPHER_CTX_free(ctx);
         crypto_auth_fail();
     }
-    const int ok = EVP_DecryptFinal_ex(ctx, plaintext.data() + out_len, &out_len);
+    const int ok = EVP_DecryptFinal_ex(ctx, plaintext.data() + out_len, &final_len);
     EVP_CIPHER_CTX_free(ctx);
     if (ok != 1) {
         crypto_auth_fail();
     }
-    plaintext.resize(static_cast<std::size_t>(out_len));
+    plaintext.resize(static_cast<std::size_t>(out_len + final_len));
     return plaintext;
 }
 

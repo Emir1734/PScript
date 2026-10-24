@@ -16,6 +16,9 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#else
+#include <fcntl.h>
+#include <unistd.h>
 #endif
 
 namespace {
@@ -283,9 +286,16 @@ bool create_sparse_file(const std::filesystem::path& path, std::uint64_t size) {
     CloseHandle(handle);
     return ok;
 #else
-    (void)path;
-    (void)size;
-    return false;
+    const int fd = ::open(path.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644);
+    if (fd < 0) {
+        return false;
+    }
+    if (ftruncate(fd, static_cast<off_t>(size)) != 0) {
+        ::close(fd);
+        return false;
+    }
+    ::close(fd);
+    return true;
 #endif
 }
 

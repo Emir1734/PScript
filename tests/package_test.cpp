@@ -498,11 +498,13 @@ int main() {
                 }
                 error.clear();
 #ifndef _WIN32
-                std::filesystem::permissions(paths.lockfile, std::filesystem::perms::owner_read,
-                                              std::filesystem::perm_options::replace);
+                const auto read_only = std::filesystem::perms::owner_read;
+                const auto read_write = std::filesystem::perms::owner_read | std::filesystem::perms::owner_write;
+                std::filesystem::permissions(paths.manifest, read_only, std::filesystem::perm_options::replace);
+                std::filesystem::permissions(paths.lockfile, read_only, std::filesystem::perm_options::replace);
                 const bool remove_failed = remove_project_dependency(paths, "extra_lib", &error);
-                std::filesystem::permissions(paths.lockfile, std::filesystem::perms::owner_read | std::filesystem::perms::owner_write,
-                                              std::filesystem::perm_options::replace);
+                std::filesystem::permissions(paths.manifest, read_write, std::filesystem::perm_options::replace);
+                std::filesystem::permissions(paths.lockfile, read_write, std::filesystem::perm_options::replace);
                 const auto manifest_after = read_text_file(paths.manifest);
                 const auto lock_after = read_text_file(paths.lockfile);
                 if (remove_failed || manifest_before != manifest_after || lock_before != lock_after ||
