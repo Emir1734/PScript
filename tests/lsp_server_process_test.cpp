@@ -372,6 +372,10 @@ std::optional<PipeProcess> spawn_lsp(const char* exe_path) {
     proc.pid = pid;
     proc.stdin_write = stdin_pipe[1];
     proc.stdout_read = stdout_pipe[0];
+    int status = 0;
+    if (waitpid(pid, &status, WNOHANG) != 0) {
+        return std::nullopt;
+    }
     return proc;
 }
 
@@ -415,6 +419,7 @@ bool run_stdio_tests(const char* exe) {
         fail("lsp_server_stdio", "failed to spawn pscript_lsp");
         return false;
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     LspStdoutReader reader;
     const auto write = [&](std::string_view data) { return write_all_fd(proc->stdin_write, data); };
     const auto pump = [&]() { pump_stdout_fd(proc->stdout_read, reader); };

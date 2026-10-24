@@ -6,6 +6,7 @@
 #include "runtime/crypto_kdf_cipher.h"
 #include "runtime/sql_connection.h"
 
+#include <algorithm>
 #include <cstring>
 #include <optional>
 #include <filesystem>
@@ -769,7 +770,12 @@ int main() {
             static const std::uint8_t expected_scrypt[] = {0xfd, 0xba, 0xbe, 0x1c, 0x9d, 0x34, 0x72, 0x00};
             if (scrypt_out.size() != 64 ||
                 !std::equal(expected_scrypt, expected_scrypt + sizeof(expected_scrypt), scrypt_out.begin())) {
-                fail_test("crypto scrypt rfc7914", "digest mismatch");
+                std::ostringstream detail;
+                detail << "digest mismatch";
+                for (std::size_t i = 0; i < std::min<std::size_t>(8, scrypt_out.size()); ++i) {
+                    detail << (i == 0 ? " got" : "") << ' ' << std::hex << static_cast<unsigned>(scrypt_out[i]);
+                }
+                fail_test("crypto scrypt rfc7914", detail.str());
             } else {
                 pass_test("crypto scrypt rfc7914");
             }

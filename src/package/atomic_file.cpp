@@ -3,6 +3,10 @@
 #include <fstream>
 #include <sstream>
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif
+
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -24,6 +28,25 @@ std::optional<std::string> read_text_file(const std::filesystem::path& path) {
 
 bool write_file_atomically(const std::filesystem::path& destination, const std::string& content, std::string* error) {
     std::error_code ec;
+    if (std::filesystem::exists(destination, ec) && !ec) {
+#ifndef _WIN32
+        if (::access(destination.c_str(), W_OK) != 0) {
+            if (error) {
+                *error = "destination is not writable: " + destination.string();
+            }
+            return false;
+        }
+#else
+        const std::wstring dest_wide = destination.wstring();
+        const DWORD attrs = GetFileAttributesW(dest_wide.c_str());
+        if (attrs != INVALID_FILE_ATTRIBUTES && (attrs & FILE_ATTRIBUTE_READONLY) != 0) {
+            if (error) {
+                *error = "destination is read-only: " + destination.string();
+            }
+            return false;
+        }
+#endif
+    }
     if (!destination.parent_path().empty()) {
         std::filesystem::create_directories(destination.parent_path(), ec);
         if (ec) {

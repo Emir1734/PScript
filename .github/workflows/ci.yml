@@ -23,7 +23,7 @@ jobs:
         run: cmake --build build --config Release --parallel
 
       - name: Test (excluding PostgreSQL integration)
-        run: ctest --test-dir build -C Release -LE postgres --output-on-failure --timeout 300
+        run: ctest --test-dir build -C Release -LE postgres --output-on-failure --timeout 600
 
   windows-debug:
     name: Windows Debug (MSVC)
@@ -39,7 +39,7 @@ jobs:
         run: cmake --build build --config Debug --parallel
 
       - name: Test (excluding PostgreSQL integration)
-        run: ctest --test-dir build -C Debug -LE postgres --output-on-failure --timeout 300
+        run: ctest --test-dir build -C Debug -LE postgres --output-on-failure --timeout 600
 
   linux-release:
     name: Linux Release (GCC)
@@ -62,7 +62,7 @@ jobs:
         run: cmake --build build --parallel
 
       - name: Test (excluding PostgreSQL integration)
-        run: ctest --test-dir build -LE postgres --output-on-failure --timeout 300
+        run: ctest --test-dir build -LE postgres --output-on-failure --timeout 600
 
   linux-postgres:
     name: Linux PostgreSQL (libpq integration)

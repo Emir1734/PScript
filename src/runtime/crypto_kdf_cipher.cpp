@@ -129,9 +129,9 @@ std::vector<std::uint8_t> scrypt_openssl(const std::uint8_t* password, std::size
                                          const std::uint8_t* salt, std::size_t salt_length,
                                          const CryptoKdfScryptParams& params, std::size_t output_length) {
     std::vector<std::uint8_t> out(output_length);
-    const uint64_t max_mem = 1024ULL * 1024ULL * 1024ULL;
     if (EVP_PBE_scrypt(reinterpret_cast<const char*>(password), password_length, salt, salt_length,
-                       static_cast<uint64_t>(params.n), params.r, params.p, max_mem, out.data(), output_length) != 1) {
+                       static_cast<uint64_t>(params.n), static_cast<uint64_t>(params.r),
+                       static_cast<uint64_t>(params.p), 0, out.data(), output_length) != 1) {
         crypto_fail("scrypt operation failed");
     }
     return out;
