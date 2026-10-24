@@ -398,6 +398,7 @@ target_link_libraries(pscript_pgo_tests PRIVATE pscript_vm pscript_compiler pscr
 add_executable(pscript_jit_tests
     tests/jit_test.cpp
 )
+target_include_directories(pscript_jit_tests PRIVATE tests)
 target_link_libraries(pscript_jit_tests PRIVATE pscript_vm pscript_compiler pscript_parser pscript_jit)
 if(MSVC)
     target_link_options(pscript_jit_tests PRIVATE "/STACK:33554432")
@@ -406,6 +407,7 @@ endif()
 add_executable(pscript_jit_large_heavy_repro
     tests/jit_large_heavy_repro.cpp
 )
+target_include_directories(pscript_jit_large_heavy_repro PRIVATE tests)
 target_link_libraries(pscript_jit_large_heavy_repro PRIVATE pscript_vm pscript_compiler pscript_parser pscript_jit)
 if(MSVC)
     target_link_options(pscript_jit_large_heavy_repro PRIVATE "/STACK:33554432")
@@ -581,6 +583,7 @@ add_test(NAME jit COMMAND "$<TARGET_FILE:pscript_jit_tests>")
 add_executable(pscript_jit_opt_tests
     tests/jit_opt_test.cpp
 )
+target_include_directories(pscript_jit_opt_tests PRIVATE tests)
 target_link_libraries(pscript_jit_opt_tests PRIVATE pscript_vm pscript_compiler pscript_parser pscript_jit)
 if(MSVC)
     target_link_options(pscript_jit_opt_tests PRIVATE "/STACK:33554432")
@@ -589,6 +592,7 @@ add_test(NAME jit_opt COMMAND "$<TARGET_FILE:pscript_jit_opt_tests>")
 
 # Set Z: alternate output name so link succeeds when pscript_jit_opt_tests.exe is locked.
 add_executable(pscript_jit_opt_tests_z tests/jit_opt_test.cpp)
+target_include_directories(pscript_jit_opt_tests_z PRIVATE tests)
 target_link_libraries(pscript_jit_opt_tests_z PRIVATE pscript_vm pscript_compiler pscript_parser pscript_jit)
 if(MSVC)
     target_link_options(pscript_jit_opt_tests_z PRIVATE "/STACK:33554432")

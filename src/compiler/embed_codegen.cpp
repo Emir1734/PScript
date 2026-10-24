@@ -2,6 +2,7 @@
 
 #include "stdlib/archive/archive_security.h"
 
+#include <algorithm>
 #include <fstream>
 #include <filesystem>
 

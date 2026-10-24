@@ -88,6 +88,7 @@ editors/vscode/dist/
 
 # Local benchmark and investigation artifacts (not shipped)
 bench_*
+!tests/benchmark/bench_*.h
 bench.csv
 bench_groups*/
 bench_phase*/
