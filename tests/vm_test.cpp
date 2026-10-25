@@ -6,6 +6,7 @@
 #include "vm/vm.h"
 
 #include <atomic>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <functional>
