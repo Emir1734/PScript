@@ -95,6 +95,12 @@ bench_phase*/
 benchmarks/**/*.json
 !benchmarks/crosslang/
 
+# Consolidated local artifact tree (see artifacts/README.md)
+artifacts/benchmarks/
+artifacts/reports/
+artifacts/logs/
+artifacts/scratch/
+
 # Local debug / repro logs at repo root
 _*.txt
 _*.phs
@@ -129,3 +135,5 @@ benchmarks/**/set_*_results.txt
 # Large vendored archives (sources are extracted under deps/)
 deps/miniz.zip
 deps/miniz_full/
+
+.fake

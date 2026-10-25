@@ -2,7 +2,9 @@ import json
 import sys
 from collections import defaultdict
 
-p = sys.argv[1] if len(sys.argv) > 1 else r"D:\PScript\bench_baseline_setJ_2026-10-18.json"
+_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_default = os.path.join(_root, "artifacts", "benchmarks", "bench_baseline_setJ_2026-10-18.json")
+p = sys.argv[1] if len(sys.argv) > 1 else _default
 with open(p, "r", encoding="utf-8") as f:
     data = json.load(f)
 recs = data["results"]

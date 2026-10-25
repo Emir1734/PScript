@@ -2,8 +2,12 @@
   "name": "pscript",
   "displayName": "PScript",
   "description": "PScript language support with LSP-backed IntelliSense",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "pscript",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Emir1734/PScript.git"
+  },
   "icon": "assets/icon.png",
   "engines": {
     "vscode": "^1.85.0"
@@ -401,7 +405,7 @@
     "prepare-assets": "node ./scripts/prepare-assets.js",
     "test": "npm run compile && node ./test/run-tests.js",
     "package": "npm run compile && npm run prepare-assets && vsce package --allow-missing-repository",
-    "install-local": "npm run package && code --install-extension pscript-0.1.0.vsix --force && cursor --install-extension pscript-0.1.0.vsix --force",
+    "install-local": "npm run package && code --install-extension pscript-1.0.0.vsix --force && cursor --install-extension pscript-1.0.0.vsix --force",
     "vscode:prepublish": "npm run compile"
   },
   "dependencies": {

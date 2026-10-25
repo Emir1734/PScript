@@ -12,12 +12,17 @@ param(
 )
 
 if (-not $Root) { $Root = Split-Path $PSScriptRoot -Parent }
-if (-not $JsonPath) { $JsonPath = Join-Path $Root "bench_baseline_full_2026-10-20.json" }
-if (-not $StdoutLog) { $StdoutLog = Join-Path $Root "bench_baseline_full_2026-10-20_stdout.log" }
-if (-not $StderrLog) { $StderrLog = Join-Path $Root "bench_baseline_full_2026-10-20_stderr.log" }
-if (-not $PidFile) { $PidFile = Join-Path $Root "bench_baseline_full_2026-10-20.pid" }
-if (-not $ExitFile) { $ExitFile = Join-Path $Root "bench_baseline_full_2026-10-20.exit" }
-if (-not $Exe) { $Exe = Join-Path $Root "build-jit-final5\bin\RELEASE\pscript_benchmark.exe" }
+$ArtifactBench = Join-Path $Root "artifacts\benchmarks"
+New-Item -ItemType Directory -Force -Path $ArtifactBench | Out-Null
+if (-not $JsonPath) { $JsonPath = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.json" }
+if (-not $StdoutLog) { $StdoutLog = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20_stdout.log" }
+if (-not $StderrLog) { $StderrLog = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20_stderr.log" }
+if (-not $PidFile) { $PidFile = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.pid" }
+if (-not $ExitFile) { $ExitFile = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.exit" }
+if (-not $Exe) {
+    $Exe = Join-Path $Root "build\bin\RELEASE\pscript_benchmark.exe"
+    if (-not (Test-Path $Exe)) { $Exe = Join-Path $Root "build\bin\Release\pscript_benchmark.exe" }
+}
 
 $ErrorActionPreference = "Stop"
 if (-not (Test-Path $Exe)) { throw "Missing benchmark exe: $Exe" }

@@ -142,7 +142,7 @@
       "patterns": [
         {
           "name": "support.type.pscript",
-          "match": "\\b(int|float|bool|string|str|void|any|list|dict|object)\\b"
+          "match": "\\b(int|float|bool|string|str|void|any|list|dict|map|set|task|tuple|object)\\b"
         },
         {
           "name": "entity.name.type.pscript",
@@ -184,7 +184,7 @@
       "patterns": [
         {
           "name": "keyword.declaration.pscript",
-          "match": "\\b(func|class|struct|record|enum|interface|protocol|import|from|as|const|constructor|this|super|parent|input)\\b"
+          "match": "\\b(func|class|struct|record|enum|interface|protocol|import|from|as|const|constructor|defer|this|super|parent|input)\\b"
         }
       ]
     },
@@ -212,7 +212,7 @@
       "patterns": [
         {
           "name": "support.type.pscript",
-          "match": "\\b(int|float|bool|string|str|void|any|list|dict|object)\\b"
+          "match": "\\b(int|float|bool|string|str|void|any|list|dict|map|set|task|tuple|object)\\b"
         }
       ]
     },

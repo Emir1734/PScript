@@ -4,6 +4,8 @@ PScript is a general-purpose language: **`.phs` source → register bytecode →
 
 **Current stable release:** `1.0.0`.
 
+Local benchmark logs and reports belong under [`artifacts/`](artifacts/README.md), not the repository root.
+
 ## Quick start
 
 ```text

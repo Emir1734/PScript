@@ -9,10 +9,11 @@ param(
 )
 
 if (-not $Root) { $Root = Split-Path $PSScriptRoot -Parent }
-if (-not $PidFile) { $PidFile = Join-Path $Root "bench_baseline_full_2026-10-20.pid" }
-if (-not $ExitFile) { $ExitFile = Join-Path $Root "bench_baseline_full_2026-10-20.exit" }
-if (-not $JsonPath) { $JsonPath = Join-Path $Root "bench_baseline_full_2026-10-20.json" }
-if (-not $StderrLog) { $StderrLog = Join-Path $Root "bench_baseline_full_2026-10-20_stderr.log" }
+$ArtifactBench = Join-Path $Root "artifacts\benchmarks"
+if (-not $PidFile) { $PidFile = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.pid" }
+if (-not $ExitFile) { $ExitFile = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.exit" }
+if (-not $JsonPath) { $JsonPath = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.json" }
+if (-not $StderrLog) { $StderrLog = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20_stderr.log" }
 
 $ErrorActionPreference = "SilentlyContinue"
 if (-not (Test-Path $PidFile)) {

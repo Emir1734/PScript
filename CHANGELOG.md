@@ -2,6 +2,13 @@
 
 All notable user-facing changes are documented here. Versioning follows [Semantic Versioning](https://semver.org/). Public API rules: [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md).
 
+## [Unreleased]
+
+### Tooling
+
+- Repository housekeeping: local bench/report/log outputs consolidated under `artifacts/`; `scripts/archive_root_artifacts.ps1` sweeps the repo root.
+- VS Code extension **1.0.0** (aligned with PScript 1.0.0): grammar adds `defer`, `map`, `set`, `task`, `tuple` type names.
+
 ## [1.0.0] — 2025-10-02
 
 First **stable** release. Same public contract and behavior as **1.0.0-rc.1**, with stable version metadata (`pscript --version` → `1.0.0`), final Windows x64 distribution artifacts, and package test isolation fix retained.

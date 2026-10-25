@@ -1,7 +1,7 @@
 param(
     [Parameter(Mandatory)]
     [string]$JsonPath,
-    [string]$ReferencePath = "D:\PScript\bench_setW_full_2026-10-18.json",
+    [string]$ReferencePath = "",
     [int]$ExpectedRecords = 624
 )
 
