@@ -3357,9 +3357,9 @@ int main() {
     expect_output("stdlib net tcp string write utf8",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        written = await "
-                  "conn.write(\"hi\")\n        print(written)\n        conn.close()\n    task = client()\n    conn = await "
-                  "server.accept()\n    data = await conn.read()\n    print(data.length())\n    conn.close()\n    server.close()\n"
-                  "    await task\n",
+                  "conn.write(\"hi\")\n        await delay(10ms)\n        print(written)\n        conn.close()\n    task = client()\n"
+                  "    conn = await server.accept()\n    await delay(10ms)\n    data = await conn.read()\n    print(data.length())\n"
+                  "    conn.close()\n    server.close()\n    await task\n",
                   "2\n2\n");
     expect_output("stdlib net tcp empty bytes",
                   "import net\nimport encoding\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = "
@@ -3372,7 +3372,8 @@ int main() {
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        await conn.write("
                   "\"abc\")\n        await delay(10ms)\n        conn.close()\n    task = client()\n    conn = await server.accept()\n"
-                  "    data = await conn.read()\n    print(data.length())\n    conn.close()\n    server.close()\n    await task\n",
+                  "    await delay(10ms)\n    data = await conn.read()\n    print(data.length())\n    conn.close()\n    server.close()\n"
+                  "    await task\n",
                   "3\n");
     expect_output("stdlib net tcp close and is_open",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"

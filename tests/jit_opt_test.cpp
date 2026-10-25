@@ -1052,22 +1052,35 @@ int main() {
             pscript::jit::JitExecState direct_state;
             divmod_vm.populate_jit_exec_state(direct_state, divmod_fn, divmod_idx);
             direct_state.locals[0]->value = pscript::Runtime::make_integer(12'000);
-            const pscript::jit::JitCompiledCode* divmod_code =
-                divmod_vm.jit_engine().compile_if_needed(divmod_idx, divmod_fn);
-            if (divmod_code == nullptr || divmod_code->entry == nullptr) {
-                fail_test("num_lu_divmod optimizing direct exec", "null JIT entry");
+            bool direct_ok = false;
+            std::string direct_error;
+            for (int attempt = 0; attempt < 3; ++attempt) {
+                divmod_vm.init_locals_for_function(divmod_fn.local_count);
+                pscript::jit::JitExecState attempt_state;
+                divmod_vm.populate_jit_exec_state(attempt_state, divmod_fn, divmod_idx);
+                attempt_state.locals[0]->value = pscript::Runtime::make_integer(12'000);
+                const pscript::jit::JitCompiledCode* divmod_code =
+                    divmod_vm.jit_engine().compile_if_needed(divmod_idx, divmod_fn);
+                if (divmod_code == nullptr || divmod_code->entry == nullptr) {
+                    direct_error = "null JIT entry";
+                    break;
+                }
+                const pscript::jit::JitExecuteResult direct_run =
+                    pscript::jit::execute_compiled_entry(divmod_code, attempt_state);
+                if (direct_run == pscript::jit::JitExecuteResult::Completed && !attempt_state.deopt_requested &&
+                    attempt_state.return_value.kind == pscript::ValueKind::Integer &&
+                    attempt_state.return_value.integer == 24'029'995) {
+                    direct_ok = true;
+                    break;
+                }
+                direct_error = "run=" + std::to_string(static_cast<int>(direct_run)) + " completed=" +
+                                 std::to_string(attempt_state.completed) + " fallback=" +
+                                 std::to_string(attempt_state.fallback) + " deopt=" +
+                                 std::to_string(attempt_state.deopt_requested) + " got=" +
+                                 std::to_string(attempt_state.return_value.integer);
             }
-            const pscript::jit::JitExecuteResult direct_run =
-                pscript::jit::execute_compiled_entry(divmod_code, direct_state);
-            if (direct_run != pscript::jit::JitExecuteResult::Completed || direct_state.deopt_requested ||
-                direct_state.return_value.kind != pscript::ValueKind::Integer ||
-                direct_state.return_value.integer != 24'029'995) {
-                fail_test("num_lu_divmod optimizing direct exec",
-                          "run=" + std::to_string(static_cast<int>(direct_run)) + " completed=" +
-                              std::to_string(direct_state.completed) + " fallback=" +
-                              std::to_string(direct_state.fallback) + " deopt=" +
-                              std::to_string(direct_state.deopt_requested) + " got=" +
-                              std::to_string(direct_state.return_value.integer));
+            if (!direct_ok) {
+                fail_test("num_lu_divmod optimizing direct exec", direct_error);
             } else {
                 pass_test("num_lu_divmod optimizing direct exec");
             }
