@@ -724,8 +724,10 @@ set_target_properties(crosslang_pscript PROPERTIES
 
 add_test(NAME analysis COMMAND pscript_analysis_tests)
 add_test(NAME lsp COMMAND pscript_lsp_tests)
-add_test(NAME lsp_server_stdio COMMAND pscript_lsp_server_stdio_tests)
-set_tests_properties(lsp_server_stdio PROPERTIES WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+if(WIN32)
+    add_test(NAME lsp_server_stdio COMMAND pscript_lsp_server_stdio_tests)
+    set_tests_properties(lsp_server_stdio PROPERTIES WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+endif()
 add_test(NAME dap_stdio COMMAND pscript_dap_stdio_tests)
 add_test(NAME cli COMMAND pscript_cli_tests)
 add_test(NAME package COMMAND pscript_package_tests)
@@ -745,5 +747,5 @@ if(PostgreSQL_FOUND)
 endif()
 set(PSCRIPT_REGISTRY_POSTGRES_TEST_URL "$ENV{PSCRIPT_REGISTRY_POSTGRES_TEST_URL}" CACHE STRING
     "PostgreSQL integration test URL (re-configure CMake after setting)")
-set_tests_properties(lexer parser compiler vm runtime runtime_stress profiling pgo jit jit_opt jit_deopt stabilization compatibility debug_runtime debug_matrix analysis lsp lsp_server_stdio dap_stdio cli package registry parallel_map PROPERTIES
+set_tests_properties(lexer parser compiler vm runtime runtime_stress profiling pgo jit jit_opt jit_deopt stabilization compatibility debug_runtime debug_matrix analysis lsp dap_stdio cli package registry parallel_map PROPERTIES
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")

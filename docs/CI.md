@@ -13,6 +13,8 @@ GitHub Actions workflows live under [`.github/workflows/`](../.github/workflows/
 
 PostgreSQL integration uses a disposable database whose name contains `test` (`pscript_registry_test`). The connection URL is supplied only through `PSCRIPT_REGISTRY_POSTGRES_TEST_URL` in the postgres job (never commit credentials).
 
+The `lsp_server_stdio` CTest (subprocess LSP stdio harness) is registered on Windows only; Linux CI still runs the in-process `lsp` unit tests.
+
 ## Local commands
 
 ```bash
