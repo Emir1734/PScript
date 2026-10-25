@@ -13,6 +13,11 @@ _diag_vsix/**
 _pkg.zip
 _pkg/**
 _vsix_extract/**
+_vsix_icon_check/**
+_vsix_verify/**
+_forensics/**
+_package.log
+_icon_from_vsix.png
 *.vsix
 test/fixtures/**
 test/lang-integration-suite.js

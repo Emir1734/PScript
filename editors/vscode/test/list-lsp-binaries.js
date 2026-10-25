@@ -40,7 +40,7 @@ for (const file of files) {
   let tag = "";
   if (sha === staleSha) {
     tag = "  <-- STALE (VS Code c7677753…)";
-  } else if (rel.replace(/\\/g, "/") === "build/Debug/pscript_lsp.exe") {
+  } else if (rel.replace(/\\/g, "/") === "build/main/Debug/pscript_lsp.exe") {
     tag = "  <-- CANONICAL (prefer this)";
   }
   console.log(`${sha}  ${buf.length}  ${rel}${tag}`);

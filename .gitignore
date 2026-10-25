@@ -38,8 +38,9 @@
 *.out
 *.app
 
-# Build directories
-build/
+# Build directories (see build/README.md)
+build/**
+!build/README.md
 Build/
 build-*/
 out/

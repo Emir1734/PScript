@@ -26,14 +26,14 @@ Unhandled exceptions print `Unhandled exception:` on stderr. Use `try` / `catch`
 Typical causes:
 
 1. **A test or benchmark process still has the executable open** — close stray `pscript_*` runs you started from an older build tree; do not kill unrelated user processes.
-2. **Linking the same path from parallel jobs** — use one build directory per workspace (`cmake -S . -B build-jit-final5`) and avoid copying benchmarks into the build root under alternate names.
+2. **Linking the same path from parallel jobs** — use one build directory per workspace (`cmake -S . -B build/jit-final5`) and avoid copying benchmarks into the build root under alternate names.
 
 Release builds place **test and benchmark executables** under `build-<name>/bin/Release/` (or `bin/RELEASE/` on MSVC). The `pscript` CLI remains in the build root. Rebuild and validate:
 
 ```powershell
-cmake -S D:\PScript -B D:\PScript\build-jit-final5
-cmake --build D:\PScript\build-jit-final5 --config Release --target pscript_jit_opt_tests
-.\scripts\pscript_validate.ps1 -BuildDir D:\PScript\build-jit-final5
+cmake -S D:\PScript -B D:\PScript\build\jit-final5
+cmake --build D:\PScript\build\jit-final5 --config Release --target pscript_jit_opt_tests
+.\scripts\pscript_validate.ps1 -BuildDir D:\PScript\build\jit-final5
 ```
 
 Record the printed SHA-256 before trusting benchmark numbers.

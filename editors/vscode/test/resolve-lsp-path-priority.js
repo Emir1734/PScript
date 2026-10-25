@@ -1,5 +1,5 @@
 /**
- * When both build/Debug/pscript_lsp.exe and build/Debug/Debug/pscript_lsp.exe exist,
+ * When both build/main/Debug/pscript_lsp.exe and nested compile outputs exist,
  * resolution must pick the canonical CMake output (no nested Debug/Debug).
  */
 const crypto = require("crypto");
@@ -8,16 +8,16 @@ const path = require("path");
 
 function runResolveLspPathPriority() {
   const repoRoot = path.resolve(__dirname, "../../..");
-  const compile = path.join(repoRoot, "build", "Debug", "pscript_lsp_compile.exe");
-  const canonical = path.join(repoRoot, "build", "Debug", "pscript_lsp.exe");
-  const nested = path.join(repoRoot, "build", "Debug", "Debug", "pscript_lsp.exe");
+  const compile = path.join(repoRoot, "build", "main", "Debug", "pscript_lsp_compile.exe");
+  const canonical = path.join(repoRoot, "build", "main", "Debug", "pscript_lsp.exe");
+  const nested = path.join(repoRoot, "build", "main", "Debug", "Debug", "pscript_lsp.exe");
 
   if (!fs.existsSync(compile) && !fs.existsSync(canonical)) {
     console.log("SKIP  resolve-lsp-path-priority (build Debug pscript_lsp first)");
     return;
   }
 
-  const nestedCompile = path.join(repoRoot, "build", "Debug", "Debug", "pscript_lsp_compile.exe");
+  const nestedCompile = path.join(repoRoot, "build", "main", "Debug", "Debug", "pscript_lsp_compile.exe");
   const { resolveBuildLspPath } = require("./resolve-lsp-path");
   const resolved = resolveBuildLspPath(true);
   let expected = compile;

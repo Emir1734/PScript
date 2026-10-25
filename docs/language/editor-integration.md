@@ -21,10 +21,10 @@ No second parser or type checker runs in the extension.
 1. Build the language server (Debug or Release):
 
    ```text
-   cmake --build build --config Debug --target pscript_lsp
+   cmake --build build/main --config Debug --target pscript_lsp
    ```
 
-   The language server executable is `build/Debug/pscript_lsp.exe` (MSVC multi-config layout). Do **not** point the extension at `build/Debug/Debug/pscript_lsp.exe`; that nested path appears if the CMake binary directory is `build/Debug` instead of `build`, and the file is often an outdated copy.
+   The language server executable is `build/main/Debug/pscript_lsp.exe` (MSVC multi-config layout under `build/main`). Additional CMake trees live as siblings (`build/release`, `build/debug`, …). Do **not** point the extension at `build/main/Debug/Debug/pscript_lsp.exe`; that nested path appears if the CMake binary directory is mis-nested, and the file is often an outdated copy.
 
 2. Install extension dependencies and compile:
 

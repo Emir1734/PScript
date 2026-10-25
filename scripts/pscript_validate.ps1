@@ -1,7 +1,7 @@
-# Build and validate PScript from a fixed build directory (default: build-jit-final5).
+# Build and validate PScript from a fixed build directory (default: build/jit-final5).
 # Records executable paths and SHA-256 so results map to the current link output.
 param(
-    [string]$BuildDir = (Join-Path $PSScriptRoot "..\build-jit-final5"),
+    [string]$BuildDir = (Join-Path $PSScriptRoot "..\build\jit-final5"),
     [ValidateSet("Release", "Debug")]
     [string]$Config = "Release",
     [switch]$SkipBuild,

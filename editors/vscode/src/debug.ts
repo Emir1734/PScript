@@ -1,6 +1,11 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
+import {
+  canonicalBinaryUnderRoots,
+  cmakeBuildRoots,
+  newestBinaryUnderRoots,
+} from "./buildPaths";
 
 const DAP_COMPILE_EXE = process.platform === "win32" ? "pscript_dap_compile.exe" : "pscript_dap_compile";
 const DAP_RUNTIME_EXE = process.platform === "win32" ? "pscript_dap.exe" : "pscript_dap";
@@ -14,29 +19,12 @@ function firstExisting(candidates: string[]): string | undefined {
   return undefined;
 }
 
-function newestDapBinary(workspaceRoot: string, config: "Debug" | "Release"): string | undefined {
-  const parent = path.join(workspaceRoot, "build", config, DAP_COMPILE_EXE);
-  const nested = path.join(workspaceRoot, "build", config, "Debug", DAP_COMPILE_EXE);
-  let best: string | undefined;
-  let bestMtime = -1;
-  for (const candidate of [parent, nested]) {
-    if (!fs.existsSync(candidate)) {
-      continue;
-    }
-    const mtime = fs.statSync(candidate).mtimeMs;
-    if (mtime > bestMtime) {
-      bestMtime = mtime;
-      best = candidate;
-    }
-  }
-  return best;
-}
-
 function workspaceDapCandidates(workspaceRoot: string, preferDebug: boolean): string[] {
-  const debugCompile = newestDapBinary(workspaceRoot, "Debug");
-  const debugCanonical = path.join(workspaceRoot, "build", "Debug", DAP_RUNTIME_EXE);
-  const releaseCompile = newestDapBinary(workspaceRoot, "Release");
-  const releaseCanonical = path.join(workspaceRoot, "build", "Release", DAP_RUNTIME_EXE);
+  const roots = cmakeBuildRoots(workspaceRoot);
+  const debugCompile = newestBinaryUnderRoots(roots, "Debug", DAP_COMPILE_EXE);
+  const debugCanonical = canonicalBinaryUnderRoots(roots, "Debug", DAP_RUNTIME_EXE);
+  const releaseCompile = newestBinaryUnderRoots(roots, "Release", DAP_COMPILE_EXE);
+  const releaseCanonical = canonicalBinaryUnderRoots(roots, "Release", DAP_RUNTIME_EXE);
   const debug = [debugCompile, debugCanonical].filter((p): p is string => Boolean(p));
   const release = [releaseCompile, releaseCanonical].filter((p): p is string => Boolean(p));
   return preferDebug ? [...debug, ...release] : [...release, ...debug];

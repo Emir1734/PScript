@@ -20,17 +20,17 @@ On GitHub Actions, `vm` tests skip localhost TCP cases (`GITHUB_ACTIONS` is set)
 ## Local commands
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel
-ctest --test-dir build -LE postgres --output-on-failure
+cmake -S . -B build/main -DCMAKE_BUILD_TYPE=Release
+cmake --build build/main --parallel
+ctest --test-dir build/main -LE postgres --output-on-failure
 ```
 
 Windows (Visual Studio generator):
 
 ```powershell
-cmake -S . -B build -G "Visual Studio 18 2026" -A x64
-cmake --build build --config Release --parallel
-ctest --test-dir build -C Release -LE postgres --output-on-failure
+cmake -S . -B build/main -G "Visual Studio 18 2026" -A x64
+cmake --build build/main --config Release --parallel
+ctest --test-dir build/main -C Release -LE postgres --output-on-failure
 ```
 
 ## Requirements

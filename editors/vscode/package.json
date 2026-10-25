@@ -2,7 +2,7 @@
   "name": "pscript",
   "displayName": "PScript",
   "description": "PScript language support with LSP-backed IntelliSense",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "pscript",
   "repository": {
     "type": "git",
@@ -129,12 +129,12 @@
         "pscript.languageServer.path": {
           "type": "string",
           "default": "",
-          "description": "Path to pscript_lsp executable. Supports ${workspaceFolder}. When empty, searches build/Debug/pscript_lsp.exe under the workspace. Overrides PSCRIPT_LSP."
+          "description": "Path to pscript_lsp executable. Supports ${workspaceFolder}. When empty, searches build/main/Debug and other build/* trees under the workspace. Overrides PSCRIPT_LSP."
         },
         "pscript.languageServer.preferWorkspaceDebug": {
           "type": "boolean",
           "default": true,
-          "description": "When true, prefer build/Debug/pscript_lsp over build/Release when resolving the workspace language server."
+          "description": "When true, prefer Debug over Release when resolving the workspace language server under build/*."
         },
         "pscript.languageServer.useRuntimeCopy": {
           "type": "boolean",
@@ -144,7 +144,7 @@
         "pscript.debugAdapter.path": {
           "type": "string",
           "default": "",
-          "description": "Path to pscript_dap executable. When empty, searches build/Debug or build/Release under the workspace."
+          "description": "Path to pscript_dap executable. When empty, searches build/*/Debug and build/*/Release under the workspace."
         },
         "pscript.languageServer.trace": {
           "type": "string",
@@ -405,8 +405,8 @@
     "prepare-assets": "node ./scripts/prepare-assets.js",
     "test": "npm run compile && node ./test/run-tests.js",
     "package": "npm run compile && npm run prepare-assets && vsce package --allow-missing-repository",
-    "install-local": "npm run package && code --install-extension pscript-1.0.0.vsix --force && cursor --install-extension pscript-1.0.0.vsix --force",
-    "vscode:prepublish": "npm run compile"
+    "install-local": "npm run package && code --install-extension pscript-1.0.1.vsix --force && cursor --install-extension pscript-1.0.1.vsix --force",
+    "vscode:prepublish": "npm run compile && npm run prepare-assets"
   },
   "dependencies": {
     "vscode-languageclient": "^9.0.1"

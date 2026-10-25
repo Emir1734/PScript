@@ -3,6 +3,7 @@ const path = require("path");
 
 const COMPILE_EXE = "pscript_lsp_compile.exe";
 const CANONICAL_EXE = "pscript_lsp.exe";
+const PREFERRED_BUILD_SUBDIRS = ["main", "release", "debug"];
 
 function firstExisting(candidates) {
   for (const candidate of candidates) {
@@ -13,43 +14,89 @@ function firstExisting(candidates) {
   return undefined;
 }
 
-/** MSVC multi-config can emit pscript_lsp_compile.exe under build/Debug/Debug; pick the newest compile binary. */
-function newestCompileBinary(config) {
-  const parent = path.join(repoRoot(), "build", config, COMPILE_EXE);
-  const nested = path.join(repoRoot(), "build", config, "Debug", COMPILE_EXE);
+function repoRoot() {
+  return path.resolve(__dirname, "../../..");
+}
+
+function cmakeBuildRoots(workspaceRoot) {
+  const parent = path.join(workspaceRoot, "build");
+  if (!fs.existsSync(parent)) {
+    return [];
+  }
+  const names = fs.readdirSync(parent).filter((name) => {
+    const full = path.join(parent, name);
+    try {
+      return fs.statSync(full).isDirectory();
+    } catch {
+      return false;
+    }
+  });
+  names.sort((a, b) => {
+    const ia = PREFERRED_BUILD_SUBDIRS.indexOf(a);
+    const ib = PREFERRED_BUILD_SUBDIRS.indexOf(b);
+    if (ia >= 0 && ib >= 0) {
+      return ia - ib;
+    }
+    if (ia >= 0) {
+      return -1;
+    }
+    if (ib >= 0) {
+      return 1;
+    }
+    return a.localeCompare(b);
+  });
+  return names.map((name) => path.join(parent, name));
+}
+
+function newestBinaryUnderRoots(roots, config, fileName) {
   let best;
   let bestMtime = -1;
-  for (const candidate of [parent, nested]) {
-    if (!fs.existsSync(candidate)) {
-      continue;
-    }
-    const mtime = fs.statSync(candidate).mtimeMs;
-    if (mtime > bestMtime) {
-      bestMtime = mtime;
-      best = candidate;
+  for (const root of roots) {
+    for (const candidate of [
+      path.join(root, config, fileName),
+      path.join(root, config, "Debug", fileName),
+    ]) {
+      if (!fs.existsSync(candidate)) {
+        continue;
+      }
+      const mtime = fs.statSync(candidate).mtimeMs;
+      if (mtime > bestMtime) {
+        bestMtime = mtime;
+        best = candidate;
+      }
     }
   }
   return best;
 }
 
-function repoRoot() {
-  return path.resolve(__dirname, "../../..");
+function canonicalBinaryUnderRoots(roots, config, fileName) {
+  for (const root of roots) {
+    const candidate = path.join(root, config, fileName);
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return undefined;
 }
 
 function resolveBuildLspCompilePath(config = "Debug") {
-  return path.join(repoRoot(), "build", config, COMPILE_EXE);
+  const roots = cmakeBuildRoots(repoRoot());
+  const found = newestBinaryUnderRoots(roots, config, COMPILE_EXE);
+  return found || path.join(repoRoot(), "build", "main", config, COMPILE_EXE);
 }
 
 function resolveBuildLspCanonicalPath(config = "Debug") {
-  return path.join(repoRoot(), "build", config, CANONICAL_EXE);
+  const roots = cmakeBuildRoots(repoRoot());
+  const found = canonicalBinaryUnderRoots(roots, config, CANONICAL_EXE);
+  return found || path.join(repoRoot(), "build", "main", config, CANONICAL_EXE);
 }
 
-/** CMake link output (safe to rebuild while IDE runs a copied runtime). */
 function resolveBuildLspPath(preferDebug = true) {
-  const debugCompile = newestCompileBinary("Debug");
-  const debugCanonical = resolveBuildLspCanonicalPath("Debug");
-  const releaseCompile = newestCompileBinary("Release");
-  const releaseCanonical = resolveBuildLspCanonicalPath("Release");
+  const roots = cmakeBuildRoots(repoRoot());
+  const debugCompile = newestBinaryUnderRoots(roots, "Debug", COMPILE_EXE);
+  const debugCanonical = canonicalBinaryUnderRoots(roots, "Debug", CANONICAL_EXE);
+  const releaseCompile = newestBinaryUnderRoots(roots, "Release", COMPILE_EXE);
+  const releaseCanonical = canonicalBinaryUnderRoots(roots, "Release", CANONICAL_EXE);
   if (preferDebug) {
     return (
       firstExisting([debugCompile, debugCanonical, releaseCompile, releaseCanonical].filter(Boolean)) ||
@@ -64,7 +111,6 @@ function resolveBuildLspPath(preferDebug = true) {
   );
 }
 
-/** Used by LSP smoke tests: prefer compile-stage binary, then canonical. */
 function resolveLspPath() {
   if (process.env.PSCRIPT_LSP && fs.existsSync(process.env.PSCRIPT_LSP)) {
     return process.env.PSCRIPT_LSP;

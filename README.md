@@ -46,7 +46,7 @@ Release artifacts (Windows x64):
 
 ## Editor support
 
-VS Code extension and `pscript_lsp` — [docs/language/editor-integration.md](docs/language/editor-integration.md).
+VS Code extension and `pscript_lsp` — [docs/language/editor-integration.md](docs/language/editor-integration.md). Default CMake output: `build/main/`.
 
 ## License
 

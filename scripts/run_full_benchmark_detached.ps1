@@ -20,8 +20,9 @@ if (-not $StderrLog) { $StderrLog = Join-Path $ArtifactBench "bench_baseline_ful
 if (-not $PidFile) { $PidFile = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.pid" }
 if (-not $ExitFile) { $ExitFile = Join-Path $ArtifactBench "bench_baseline_full_2026-10-20.exit" }
 if (-not $Exe) {
-    $Exe = Join-Path $Root "build\bin\RELEASE\pscript_benchmark.exe"
-    if (-not (Test-Path $Exe)) { $Exe = Join-Path $Root "build\bin\Release\pscript_benchmark.exe" }
+    $Exe = Join-Path $Root "build\main\bin\RELEASE\pscript_benchmark.exe"
+    if (-not (Test-Path $Exe)) { $Exe = Join-Path $Root "build\main\bin\Release\pscript_benchmark.exe" }
+    if (-not (Test-Path $Exe)) { $Exe = Join-Path $Root "build\release\bin\RELEASE\pscript_benchmark.exe" }
 }
 
 $ErrorActionPreference = "Stop"

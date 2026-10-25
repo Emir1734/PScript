@@ -45,11 +45,11 @@ pscript-<version>-<platform>/
 ```text
 git clone <repository>
 cd PScript
-cmake -S . -B build
-cmake --build build --config Release
+cmake -S . -B build/main
+cmake --build build/main --config Release
 ```
 
-Executables (MSVC multi-config): `build/pscript.exe`, `build/pscript_lsp.exe`. On single-config generators: `build/pscript`, `build/pscript_lsp`.
+Executables (MSVC multi-config, default tree `build/main`): `build/main/Release/pscript.exe`, `build/main/Release/pscript_lsp.exe`. On single-config generators: `build/main/pscript`, `build/main/pscript_lsp`.
 
 Optional: run the RC validation gate on Windows:
 

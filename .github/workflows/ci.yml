@@ -17,13 +17,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure
-        run: cmake -S . -B build -G "Visual Studio 18 2026" -A x64
+        run: cmake -S . -B build/main -G "Visual Studio 18 2026" -A x64
 
       - name: Build
-        run: cmake --build build --config Release --parallel
+        run: cmake --build build/main --config Release --parallel
 
       - name: Test (excluding PostgreSQL integration)
-        run: ctest --test-dir build -C Release -LE postgres --output-on-failure --timeout 600
+        run: ctest --test-dir build/main -C Release -LE postgres --output-on-failure --timeout 600
 
   windows-debug:
     name: Windows Debug (MSVC)
@@ -33,13 +33,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure
-        run: cmake -S . -B build -G "Visual Studio 18 2026" -A x64
+        run: cmake -S . -B build/main -G "Visual Studio 18 2026" -A x64
 
       - name: Build
-        run: cmake --build build --config Debug --parallel
+        run: cmake --build build/main --config Debug --parallel
 
       - name: Test (excluding PostgreSQL integration)
-        run: ctest --test-dir build -C Debug -LE postgres --output-on-failure --timeout 600
+        run: ctest --test-dir build/main -C Debug -LE postgres --output-on-failure --timeout 600
 
   linux-release:
     name: Linux Release (GCC)
@@ -56,13 +56,13 @@ jobs:
             libssl-dev libsqlite3-dev
 
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build/main -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build/main --parallel
 
       - name: Test (excluding PostgreSQL integration)
-        run: ctest --test-dir build -LE postgres --output-on-failure --timeout 600
+        run: ctest --test-dir build/main -LE postgres --output-on-failure --timeout 600
 
   linux-postgres:
     name: Linux PostgreSQL (libpq integration)
@@ -95,10 +95,10 @@ jobs:
             libssl-dev libsqlite3-dev libpq-dev
 
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DPSCRIPT_REGISTRY_POSTGRES_TEST_URL="$PSCRIPT_REGISTRY_POSTGRES_TEST_URL"
+        run: cmake -S . -B build/main -DCMAKE_BUILD_TYPE=Release -DPSCRIPT_REGISTRY_POSTGRES_TEST_URL="$PSCRIPT_REGISTRY_POSTGRES_TEST_URL"
 
       - name: Build registry postgres tests
-        run: cmake --build build --target pscript_registry_postgres_tests --parallel
+        run: cmake --build build/main --target pscript_registry_postgres_tests --parallel
 
       - name: PostgreSQL integration tests
-        run: ctest --test-dir build -L postgres --output-on-failure --timeout 120
+        run: ctest --test-dir build/main -L postgres --output-on-failure --timeout 120
