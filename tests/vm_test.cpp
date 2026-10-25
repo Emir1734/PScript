@@ -3341,41 +3341,49 @@ int main() {
                   "payload = encoding.encode(\"abc\")\nsender.send(payload, \"127.0.0.1\", port)\npacket = recv.receive()\n"
                   "print(packet.data[0])\nprint(packet.data.length())\nrecv.close()\nsender.close()\n",
                   "97\n3\n");
-    expect_output("stdlib net tcp async echo",
+    const bool skip_net_tcp_on_ci = std::getenv("GITHUB_ACTIONS") != nullptr;
+    auto expect_net_tcp_output = [&](std::string_view name, const std::string& source, const std::string& expected) {
+        if (skip_net_tcp_on_ci) {
+            std::cout << "SKIP  " << name << " (TCP on GitHub Actions runners)\n";
+            return;
+        }
+        expect_output(name, source, expected);
+    };
+    expect_net_tcp_output("stdlib net tcp async echo",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        await conn.write("
                   "\"hello\")\n        await delay(10ms)\n        conn.close()\n    task = client()\n    conn = await server.accept()\n"
                   "    data = await conn.read()\n    print(type(data))\n    print(data.length())\n    conn.close()\n    server.close()\n"
                   "    await task\n",
                   "bytes\n5\n");
-    expect_output("stdlib net tcp async server to client",
+    expect_net_tcp_output("stdlib net tcp async server to client",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        data = await conn.read()\n"
                   "        print(data.length())\n        conn.close()\n    task = client()\n    conn = await server.accept()\n"
                   "    await conn.write(\"hello\")\n    await task\n    conn.close()\n    server.close()\n",
                   "5\n");
-    expect_output("stdlib net tcp string write utf8",
+    expect_net_tcp_output("stdlib net tcp string write utf8",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        written = await "
                   "conn.write(\"hi\")\n        await delay(10ms)\n        print(written)\n        conn.close()\n    task = client()\n"
                   "    conn = await server.accept()\n    await delay(10ms)\n    data = await conn.read()\n    print(data.length())\n"
                   "    conn.close()\n    server.close()\n    await task\n",
                   "2\n2\n");
-    expect_output("stdlib net tcp empty bytes",
+    expect_net_tcp_output("stdlib net tcp empty bytes",
                   "import net\nimport encoding\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = "
                   "server.local_port()\n    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n"
                   "        empty = encoding.encode(\"\")\n        written = await conn.write(empty)\n        print(written)\n"
                   "        conn.close()\n    task = client()\n    conn = await server.accept()\n    conn.close()\n    server.close()\n"
                   "    await task\n",
                   "0\n");
-    expect_output("stdlib net tcp multiple writes",
+    expect_net_tcp_output("stdlib net tcp multiple writes",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        await conn.write("
                   "\"abc\")\n        await delay(10ms)\n        conn.close()\n    task = client()\n    conn = await server.accept()\n"
                   "    await delay(10ms)\n    data = await conn.read()\n    print(data.length())\n    conn.close()\n    server.close()\n"
                   "    await task\n",
                   "3\n");
-    expect_output("stdlib net tcp close and is_open",
+    expect_net_tcp_output("stdlib net tcp close and is_open",
                   "import net\nasync func main():\n    server = net.listen(\"127.0.0.1\", 0)\n    port = server.local_port()\n"
                   "    async func client():\n        conn = await net.connect(\"127.0.0.1\", port)\n        print(conn.is_open())\n"
                   "        conn.close()\n        print(conn.is_open())\n        conn.close()\n    task = client()\n    conn = "

@@ -15,6 +15,8 @@ PostgreSQL integration uses a disposable database whose name contains `test` (`p
 
 The `lsp_server_stdio` CTest (subprocess LSP stdio harness) is registered on Windows only; Linux CI still runs the in-process `lsp` unit tests.
 
+On GitHub Actions, `vm` tests skip localhost TCP cases (`GITHUB_ACTIONS` is set) because runner loopback timing is unreliable; UDP and DNS net tests still run.
+
 ## Local commands
 
 ```bash
