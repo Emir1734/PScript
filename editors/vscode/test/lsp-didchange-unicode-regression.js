@@ -1,13 +1,13 @@
 /**
  * Regression: VS Code-style didChange with only "ç" / "ö" must not kill pscript_lsp.
- * Uses build/Debug/pscript_lsp.exe explicitly (not stale Release paths).
+ * Uses the workspace Debug LSP under build/main (or other build/* trees).
  */
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { resolveLspPath } = require("./resolve-lsp-path.js");
 
-const repoRoot = path.resolve(__dirname, "../../..");
-const lspPath = process.env.PSCRIPT_LSP || path.join(repoRoot, "build", "Debug", "pscript_lsp.exe");
+const lspPath = process.env.PSCRIPT_LSP || resolveLspPath();
 
 if (!fs.existsSync(lspPath)) {
   console.error(`FAIL  lsp-didchange-unicode-regression: missing ${lspPath}`);

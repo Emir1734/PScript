@@ -84,6 +84,12 @@ editors/vscode/.vscode-test/
 editors/vscode/_forensics/
 editors/vscode/_pkg/
 editors/vscode/_vsix_tmp/
+editors/vscode/_vsix_icon_check/
+editors/vscode/_vsix_verify/
+editors/vscode/_icon_from_vsix.png
+editors/vscode/_package.log
+editors/vscode/*.vsix
+editors/vscode/*.zip
 editors/vscode/out/
 editors/vscode/dist/
 
@@ -109,6 +115,7 @@ tmp_*
 *.pid
 *.pid.meta
 test.phs
+pscript.phs
 
 # Local performance / readiness reports at repo root
 *_report.md

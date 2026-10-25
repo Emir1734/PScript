@@ -8,6 +8,7 @@ All notable user-facing changes are documented here. Versioning follows [Semanti
 
 - Repository housekeeping: local bench/report/log outputs consolidated under `artifacts/`; `scripts/archive_root_artifacts.ps1` sweeps the repo root.
 - CMake build trees consolidated under `build/` (default `build/main`; former root `build-*` dirs moved to named siblings). CI uses `build/main`.
+- VS Code extension **1.0.2**: gitignore for local VSIX/scratch; maintenance after build layout consolidation.
 - VS Code extension **1.0.1**: resolves LSP/DAP under `build/*` trees; packaging excludes local VSIX forensic scratch dirs.
 - VS Code extension **1.0.0** (aligned with PScript 1.0.0): grammar adds `defer`, `map`, `set`, `task`, `tuple` type names.
 

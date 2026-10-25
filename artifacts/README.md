@@ -9,3 +9,5 @@ To sweep stray root-level bench/log files into here:
 ```powershell
 ./scripts/archive_root_artifacts.ps1
 ```
+
+Scratch benchmark folders (`bench_groups*`, `bench_phase*`) and similar local dirs can be moved manually into `artifacts/scratch/`.
